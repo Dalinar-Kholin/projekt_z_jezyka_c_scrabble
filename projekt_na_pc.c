@@ -3,18 +3,11 @@
 #include <wchar.h>
 #include "locale.h"
 
-//C:\Users\osado\CLionProjects\codewars\textfile\lolcna.txt
-//./textfile/pop.txt
-// ./a.out -points XYZ -corps zyx
 
 int main(int argc, char **argv) {
-    int test=0;
     setlocale(LC_ALL, "en_US.utf8");
     FILE *f = fopen("./pop.txt", "r");
-    for(int i = 1;i<argc;i++){
-        if(dl(argv[i])>1 && argv[i][0]=='-' && argv[i][1]=='t'){
-            test=1;
-        }
+    for(int i = 1;i<argc;i++){// mozliwosc dodania wiecej blankow aby sprawdzic jak bedzie sie zachowywal program
         int dlugosc=dl(argv[i]);
         if(dlugosc<6 || dlugosc>7) continue;
         if(argv[i][0]=='-' && argv[i][1]=='p' && argv[i][2]=='o' && argv[i][3]=='i' && argv[i][4]=='n' && argv[i][5]=='t' && argv[i][6]=='s') {
@@ -46,14 +39,7 @@ int main(int argc, char **argv) {
         if(argv[i][0]=='-' && argv[i][1]=='c' && argv[i][2]=='o' && argv[i][3]=='r' && argv[i][4]=='p' && argv[i][5]=='s'){
             f = fopen(argv[i+1], "r");
         }
-    }// flagi wywolania funkcji dzialaja chyba dobrze XD
-
-    if (argc == 2 && argv[1][0] == '-' && argv[1][1] != '\0' && argv[1][1] == 'h') {
-        printf("program przyjmuje max 8 polskich liter dla innych danych prosi o podanie prawidlowych\n");
-        printf("aby wyswietlic aktualna wartosc liter wpisz ^");
-        printf("jezeli nie udalo sie znalezc slowa ktore da sie ulozyc program o tym poinfrmuje i w sumie to chyba tyle\n\n\n");
-        return 0;
-    }// manual
+    }// flagi wywolania funkcji dzialaja
     int *slowo = (int *) calloc(30, sizeof(int));
     if (f == NULL) {
         fprintf(stderr, "ayayyaya cos poszlo nie tak\n");
@@ -71,7 +57,7 @@ int main(int argc, char **argv) {
             break;
         }
         if (c == L'\n') {
-            if (par <= 9) {//czemu 9 a nie 8 - otóż nie wiem działam jak małpa dla 9 działa a dla 8 nie...
+            if (par <= 9) {
                 dodanie_slowa(kamien, slowo, par);
             }
             par = 0;
@@ -85,20 +71,20 @@ int main(int argc, char **argv) {
     slowo_wynikowe = (tree **) calloc(10, sizeof(tree));
     max_buffor=10;
     while (1) {
+
         wynik_ilosc_punktow = 0;
         printf("\n========================\n");
         printf("Prosze podac litery: \n\n");
         ile_wynikow=0;
         iel = 0;//ilosc iteracji aby zac zlozonosc tak mniej wiecej
         wchar_t slowo_do_wczytania_wc[100];
-        if (fgetws(slowo_do_wczytania_wc, 100, stdin)==NULL){ fprintf(stderr,"nie udało się wczytać\n");}
-        if (zliczanie_blankow(slowo_do_wczytania_wc)>2&& test==0){ goto spaghetti;}
+        for (int i = 0; i < 100; ++i) {
+            slowo_do_wczytania_wc[i]=25;
+        }
+        if (fgetws(slowo_do_wczytania_wc, 100, stdin)==NULL){ fprintf(stderr,"niepoprawne dane \n");return -1;}
         int litery[10];
         ilosc_posiadanych_liter = 0;
         while (slowo_do_wczytania_wc[ilosc_posiadanych_liter] != L'\n') {
-            if (ilosc_posiadanych_liter >= 8) {
-                goto spaghetti;
-            }
             litery[ilosc_posiadanych_liter] = zmiana_litery_na_int(slowo_do_wczytania_wc[ilosc_posiadanych_liter]);
             ilosc_posiadanych_liter++;
         }
@@ -110,17 +96,15 @@ int main(int argc, char **argv) {
                 return 0;
             }
         }//wyjscie z programu
-        while (litery[0] == 404 || ilosc_posiadanych_liter > 8 || (zliczanie_blankow(slowo_do_wczytania_wc)>2 && test==0)) {
-            spaghetti:
-            printf("prosze podac poprawne dane :/\n");
-            ilosc_posiadanych_liter = 0;
-            if ((fgetws(slowo_do_wczytania_wc, 100, stdin)) == NULL) {
-                goto spaghetti;
-            };
+        while (sprawdzenie_pooprawnosci_podanych_liter(litery)) {
+            printf("prosimy o podanie prawidlowych danych\n\n");
+            if (fgetws(slowo_do_wczytania_wc, 100, stdin)==NULL){ fprintf(stderr,"nie udało się wczytać\n");return -1;}
+            ilosc_posiadanych_liter=0;
             while (slowo_do_wczytania_wc[ilosc_posiadanych_liter] != L'\n') {
                 litery[ilosc_posiadanych_liter] = zmiana_litery_na_int(slowo_do_wczytania_wc[ilosc_posiadanych_liter]);
                 ilosc_posiadanych_liter++;
             }
+            bubble_sort(litery,ilosc_posiadanych_liter);
             for (int i = 0; i < ilosc_posiadanych_liter; i++) {
                 if (slowo_do_wczytania_wc[i] >= L'0' && slowo_do_wczytania_wc[i] <= L'9') {
                     printf("dziękujemy za skorzystanie z naszych usług :))\n");
@@ -129,13 +113,13 @@ int main(int argc, char **argv) {
                 }
             }
         }
-        //printf("\n------ %d ------\n", ilosc_posiadanych_liter);
-        /*for (int i = 0; i < ilosc_posiadanych_liter; ++i) {
-            printf("-----%d-----",litery[i]);
-        }putchar('\n'); debuggowanie  */
+
+
+        if(ilosc_posiadanych_liter>8){printf("prosze podac poprawne litery\n\n");continue;}
         printf("\n----------------------------------------\n");
         szukanie_najbardziej_punktowanego_slowa(kamien, litery, ilosc_posiadanych_liter, 0, 0);
         wyswietlanie_slow_wynikowych(litery);//wyswietlanie slowa
+        //a musze je tam wstawic aby nie było powidoków po poprzednich zestawach liter
         printf("ile iteracji: %d\n", iel);
         printf("\n========================\n");
     }

@@ -1,6 +1,3 @@
-//
-// Created by osado on 19.01.2023.
-//
 #include "dzewa_na_tablicach.h"
 
 int ile_wynikow;
@@ -17,6 +14,12 @@ int punktacja[] = {5, 6, 5, 3, 7, 5, 5, 9, 5, 1, 3, 2, 2, 1, 5, 3, 3, 1, 3, 2, 2
                    1};
 
 
+int sprawdzenie_pooprawnosci_podanych_liter(int * slowo) {
+    if(slowo[0]==404){return 1;}
+    if(slowo[2]==100){return 1;}//korzystanie z posortowania tablicy
+    return 0;
+}
+
 
 tree *inicjacja(tree *root, int litera) {
     tree *zwrot = calloc(1, sizeof(tree));//calloc powoduje że wszsystkie gałęzie z bomby są null
@@ -27,14 +30,14 @@ tree *inicjacja(tree *root, int litera) {
     return zwrot;
 }// inicjowanie lisci
 
-short zliczanie_blankow(wint_t * slowo){
-    int i=0;
-    int wynik=0;
-    while (slowo[i]!=L'\0'){
-        if(slowo[i]==L'-'){wynik+=1;}
+short zliczanie_blankow(wint_t *slowo) {
+    int i = 0;
+    int wynik = 0;
+    while (slowo[i] != L'\0') {
+        if (slowo[i] == L'-') { wynik += 1; }
         i++;
     }
-    return (short)wynik;
+    return (short) wynik;
 }
 
 tree *inicjacja_ojca() {
@@ -97,27 +100,28 @@ void wyswietlanie_slow_wynikowych_pomoc(int *posiadane_litery, tree *wyswietlane
     }//dodac blanki
     wchar_t wynik[10];
     int i = 0;
+    int count=0;
     while (wyswietlane_slowo[0].ispapa != 1) {
         if (ile_literek[wyswietlane_slowo[0].value] <= 0) {
+            count++;
             wynik[i] = tablica_znakow_wchar[wyswietlane_slowo[0].value + 35];
         } else {
-            ile_literek[wyswietlane_slowo[0].value]-=1;
+            ile_literek[wyswietlane_slowo[0].value] -= 1;
             wynik[i] = tablica_znakow_wchar[wyswietlane_slowo[0].value];
         }
         wyswietlane_slowo = wyswietlane_slowo[0].poprzednie;
         i++;
     }
     i -= 1;
-    for (; i >= 0; i--) {
-        printf("%lc", wynik[i]);
+    if(count<3){
+        for (; i >= 0; i--) {
+            printf("%lc", wynik[i]);
+        }
+        putchar('\n');
+        putchar('\n');
     }
-    putchar('\n');
-    putchar('\n');
     free(ile_literek);
 }
-//ala
-//9 12 9
-
 
 void wyswietlanie_slow_wynikowych(int *posiadane_litery) {
     if (wynik_ilosc_punktow == 0) {
@@ -148,7 +152,9 @@ void szukanie_najbardziej_punktowanego_slowa(tree *root, int tab[], int dlugosc,
         }
         slowo_wynikowe[ile_wynikow] = root;
         ile_wynikow += 1;
-        if (ile_wynikow == max_buffor - 2) { slowo_wynikowe = realloc(slowo_wynikowe, (sizeof(tree)) * (max_buffor *= 2)); }
+        if (ile_wynikow == max_buffor - 2) {
+            slowo_wynikowe = realloc(slowo_wynikowe, (sizeof(tree)) * (max_buffor *= 2));
+        }
     } //dodawanie do wyniku
     for (int i = 0; i < dlugosc; ++i) {
         if (tab[i] != 100 && root->rodzina[tab[i]] == NULL) { continue; }
@@ -175,7 +181,7 @@ void szukanie_najbardziej_punktowanego_slowa(tree *root, int tab[], int dlugosc,
 }
 
 void dodanie_slowa(tree *root, int tab[], int dlugosc) {
-    for (int i = 0; i < dlugosc - 1; i++) {// o dziwo szlaczki jak najbardziej sa alfabetem
+    for (int i = 0; i < dlugosc - 1; i++) {
         if (root->rodzina[tab[i]] == NULL) {
             root->rodzina[tab[i]] = inicjacja(root, tab[i]);
         }
@@ -185,7 +191,7 @@ void dodanie_slowa(tree *root, int tab[], int dlugosc) {
 }//dodanie slowa do drzewa
 
 void czyszczenie_pamieci_drzewa(tree *root) {
-    for (int i = 0; i < 35; i++) {
+    for (int i = 0; i < 36; i++) {
         if (root->rodzina[i] != NULL) czyszczenie_pamieci_drzewa(root->rodzina[i]);
     }
     free(root);
