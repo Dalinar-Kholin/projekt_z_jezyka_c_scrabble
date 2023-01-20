@@ -66,7 +66,6 @@ void bubble_sort(int *tab, int len) {
             }
         }
     }
-
 }//sortowanie
 
 void bubble_sort_wskaznikow() {
@@ -144,6 +143,7 @@ void wyswietlanie_slow_wynikowych(int *posiadane_litery) {
 
 
 void szukanie_najbardziej_punktowanego_slowa(tree *root, int tab[], int dlugosc, int blank, int punkty) {
+    if(dlugosc<0){return;} // walka z duchami
     if (blank != 1 && root->ispapa == 0) { punkty += punktacja[root->value]; }
     if ((punkty >= wynik_ilosc_punktow) && (root->ile != 0) && (punkty != 0)) {
         if (punkty > wynik_ilosc_punktow) {
