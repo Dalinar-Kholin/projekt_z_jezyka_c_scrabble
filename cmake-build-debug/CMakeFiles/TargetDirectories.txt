@@ -1,3 +1,0 @@
-C:/Users/osado/OneDrive/Pulpit/scrabble_projekt/projekt_z_jezyka_c_scrabble/cmake-build-debug/CMakeFiles/projekt_z_jezyka_c_scrabble.dir
-C:/Users/osado/OneDrive/Pulpit/scrabble_projekt/projekt_z_jezyka_c_scrabble/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/osado/OneDrive/Pulpit/scrabble_projekt/projekt_z_jezyka_c_scrabble/cmake-build-debug/CMakeFiles/rebuild_cache.dir
