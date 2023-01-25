@@ -37,10 +37,11 @@ int main(int argc, char **argv) {
             }
         }
         if(argv[i][0]=='-' && argv[i][1]=='c' && argv[i][2]=='o' && argv[i][3]=='r' && argv[i][4]=='p' && argv[i][5]=='s'){
+            fclose(f);
             f = fopen(argv[i+1], "r");
         }
     }// flagi wywolania funkcji dzialaja
-    int *slowo = (int *) calloc(30, sizeof(int));
+    int *slowo = (int *) calloc(100, sizeof(int));
     if (f == NULL) {
         fprintf(stderr, "ayayyaya cos poszlo nie tak\n");
         return 1;
@@ -48,17 +49,19 @@ int main(int argc, char **argv) {
     int par = 0;
     wint_t c;
     tree *kamien = inicjacja_ojca();
+    int nwm=0;
     for (int i = 0;; i++) {
         c = (wint_t) fgetwc(f);
         if ( c == WEOF) {
-            if (par <= 9) {
+            if (par <= 8) {
                 dodanie_slowa(kamien, slowo, par);
             }
             break;
         }
         if (c == L'\n') {
-            if (par <= 9) {
+            if (par <= 8) {
                 dodanie_slowa(kamien, slowo, par);
+                nwm++;
             }
             par = 0;
             continue;//pomija \n
@@ -66,6 +69,7 @@ int main(int argc, char **argv) {
         slowo[par] = zmiana_litery_na_int(c);
         par += 1;
     }
+    fclose(f);
     free(slowo);
     printf("type any number to stop\n");
     slowo_wynikowe = (tree **) calloc(10, sizeof(tree));
@@ -82,7 +86,7 @@ int main(int argc, char **argv) {
             slowo_do_wczytania_wc[i]=25;
         }
         if (fgetws(slowo_do_wczytania_wc, 100, stdin)==NULL){ fprintf(stderr,"niepoprawne dane \n");return -1;}
-        int litery[10];
+        int litery[dl_wc(slowo_do_wczytania_wc)];
         ilosc_posiadanych_liter = 0;
         while (slowo_do_wczytania_wc[ilosc_posiadanych_liter] != L'\n') {
             litery[ilosc_posiadanych_liter] = zmiana_litery_na_int(slowo_do_wczytania_wc[ilosc_posiadanych_liter]);
@@ -115,12 +119,16 @@ int main(int argc, char **argv) {
         }
 
 
-        if(ilosc_posiadanych_liter>8){printf("prosze podac poprawne litery\n\n");continue;}
+        if(ilosc_posiadanych_liter>9){printf("prosze podac poprawne litery\n\n");continue;}
+        putchar('\n');
         printf("\n----------------------------------------\n");
         szukanie_najbardziej_punktowanego_slowa(kamien, litery, ilosc_posiadanych_liter, 0, 0);
         wyswietlanie_slow_wynikowych(litery);//wyswietlanie slowa
         //a musze je tam wstawic aby nie było powidoków po poprzednich zestawach liter
         printf("ile iteracji: %d\n", iel);
         printf("\n========================\n");
+        for (int i = 0; i < ile_wynikow; ++i) {
+            slowo_wynikowe[i]=NULL;
+        }
     }
 }

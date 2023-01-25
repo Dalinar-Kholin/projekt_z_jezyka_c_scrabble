@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.21"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "projekt_z_jezyka_c_scrabble",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "projekt_z_jezyka_c_scrabble::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-projekt_z_jezyka_c_scrabble-Debug-56fdd2f4318afff03bd0.json",
+					"name" : "projekt_z_jezyka_c_scrabble",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/osado/OneDrive/Pulpit/scrabble_projekt/projekt_z_jezyka_c_scrabble/cmake-build-debug",
+		"source" : "C:/Users/osado/OneDrive/Pulpit/scrabble_projekt/projekt_z_jezyka_c_scrabble"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

@@ -30,16 +30,6 @@ tree *inicjacja(tree *root, int litera) {
     return zwrot;
 }// inicjowanie lisci
 
-short zliczanie_blankow(wint_t *slowo) {
-    int i = 0;
-    int wynik = 0;
-    while (slowo[i] != L'\0') {
-        if (slowo[i] == L'-') { wynik += 1; }
-        i++;
-    }
-    return (short) wynik;
-}
-
 tree *inicjacja_ojca() {
     tree *zwrot = calloc(1, sizeof(tree));
     if (zwrot != NULL) {
@@ -53,6 +43,11 @@ tree *inicjacja_ojca() {
 int dl(char *slowo) {
     int i = 0;
     while (slowo[i] != '\0') { i++; }
+    return i;
+}
+int dl_wc(wchar_t *slowo) {
+    int i = 0;
+    while (slowo[i] != L'\0') { i++; }
     return i;
 }
 
@@ -100,22 +95,24 @@ void wyswietlanie_slow_wynikowych_pomoc(int *posiadane_litery, tree *wyswietlane
     wchar_t wynik[10];
     int i = 0;
     int count=0;
-    while (wyswietlane_slowo[0].ispapa != 1) {
-        if (ile_literek[wyswietlane_slowo[0].value] <= 0) {
+    while (wyswietlane_slowo->ispapa != 1) {
+        if (ile_literek[wyswietlane_slowo->value] <= 0) {
             count++;
-            wynik[i] = tablica_znakow_wchar[wyswietlane_slowo[0].value + 35];
+            wynik[i] = tablica_znakow_wchar[wyswietlane_slowo->value + 35];
         } else {
-            ile_literek[wyswietlane_slowo[0].value] -= 1;
-            wynik[i] = tablica_znakow_wchar[wyswietlane_slowo[0].value];
+            ile_literek[wyswietlane_slowo->value] -= 1;
+            wynik[i] = tablica_znakow_wchar[wyswietlane_slowo->value];
         }
-        wyswietlane_slowo = wyswietlane_slowo[0].poprzednie;
+        wyswietlane_slowo = wyswietlane_slowo->poprzednie;
         i++;
     }
-    i -= 1;
+    putchar('\n');
+    i-=1;
     if(count<3){
         for (; i >= 0; i--) {
             printf("%lc", wynik[i]);
         }
+
         putchar('\n');
         putchar('\n');
     }
@@ -143,10 +140,12 @@ void wyswietlanie_slow_wynikowych(int *posiadane_litery) {
 
 
 void szukanie_najbardziej_punktowanego_slowa(tree *root, int tab[], int dlugosc, int blank, int punkty) {
-    if(dlugosc<0){return;} // walka z duchami
     if (blank != 1 && root->ispapa == 0) { punkty += punktacja[root->value]; }
     if ((punkty >= wynik_ilosc_punktow) && (root->ile != 0) && (punkty != 0)) {
         if (punkty > wynik_ilosc_punktow) {
+            for (int i = 0; i < max_buffor; ++i) {
+                slowo_wynikowe[i]=NULL;
+            }
             ile_wynikow = 0;
             wynik_ilosc_punktow = punkty;
         }
@@ -181,7 +180,10 @@ void szukanie_najbardziej_punktowanego_slowa(tree *root, int tab[], int dlugosc,
 }
 
 void dodanie_slowa(tree *root, int tab[], int dlugosc) {
-    for (int i = 0; i < dlugosc - 1; i++) {
+    for (int i =0;i<dlugosc;i++){
+        if (tab[i]==404)return;
+    }
+    for (int i = 0; i < dlugosc ; i++) {
         if (root->rodzina[tab[i]] == NULL) {
             root->rodzina[tab[i]] = inicjacja(root, tab[i]);
         }
